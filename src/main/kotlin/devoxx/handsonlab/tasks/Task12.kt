@@ -10,4 +10,12 @@ import kotlinx.coroutines.*
  *
  * What is the expected result? Is there a race condition here?
  */
-fun sendMessageWithCancel(msg: String): Unit = TODO()
+fun sendMessageWithCancel(msg: String) {
+    runBlocking {
+        val job = launch(Dispatchers.Default) {
+            sendMessage(msg)
+            delay(2_000)
+        }
+        job.cancel()
+    }
+}

@@ -10,7 +10,12 @@ import kotlin.coroutines.suspendCoroutine
  * should be [threadName] and it should sleep for 2 seconds and then resume [separateThreadReturn] so that it returns [msg]
  * as a result. Use [suspendCoroutine].
  */
-suspend fun separateThreadReturn(threadName: String, msg: String): String = TODO()
+suspend fun separateThreadReturn(threadName: String, msg: String): String = suspendCoroutine { continuation ->
+    thread(name = threadName) {
+        sleep(2_000)
+        continuation.resumeWith(Result.success(msg))
+    }
+}
 
 /**
  * Implement [separateThreadReturn]2 function, which should [delay] for 2 seconds and then create and start new thread
@@ -19,4 +24,11 @@ suspend fun separateThreadReturn(threadName: String, msg: String): String = TODO
  *
  * Can you tell the difference between this function and the [separateThreadReturn] function?
  */
-suspend fun separateThreadReturn2(threadName: String, msg: String): String = TODO()
+suspend fun separateThreadReturn2(threadName: String, msg: String): String {
+    delay(2_000)
+    return suspendCoroutine { continuation ->
+        thread(name = threadName) {
+            continuation.resumeWith(Result.success(msg))
+        }
+    }
+}

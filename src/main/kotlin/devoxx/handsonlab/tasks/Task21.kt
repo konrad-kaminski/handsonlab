@@ -12,4 +12,7 @@ import kotlinx.coroutines.coroutineScope
  * Implement [produceMessageToChannel] function, which should create a new channel and
  * send a [msg] to it. Use [produce] with [Dispatchers.Default] coroutine context.
  */
-fun CoroutineScope.produceMessageToChannel(msg: String): ReceiveChannel<String> = TODO()
+fun CoroutineScope.produceMessageToChannel(msg: String): ReceiveChannel<String> =
+    produce(Dispatchers.Default) {
+        send(msg)
+    }

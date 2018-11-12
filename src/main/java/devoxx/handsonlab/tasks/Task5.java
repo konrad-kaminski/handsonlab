@@ -16,11 +16,31 @@ import org.jetbrains.annotations.NotNull;
  * Try adding some logging statements to observe what are the results of the <i>execute</i> method.
  */
 public class Task5 implements SuspendingInterface {
+    private final SuspendingInterface delegate;
+
     public Task5(final SuspendingInterface delegate) {
+        this.delegate = delegate;
     }
 
     @Override
     public Object execute(int p, @NotNull Continuation<? super Integer> continuation) {
-        return null;
+        final Object result = delegate.execute(p, new Continuation<Integer>() {
+            @NotNull
+            @Override
+            public CoroutineContext getContext() {
+                return continuation.getContext();
+            }
+
+            @Override
+            public void resumeWith(@NotNull Object o) {
+                continuation.resumeWith (((Integer) o) + 5);
+            }
+        });
+
+        if (result == IntrinsicsKt.getCOROUTINE_SUSPENDED()) {
+            return result;
+        } else {
+            return ((Integer) delegate.execute(p, continuation)) + 5;
+        }
     }
 }

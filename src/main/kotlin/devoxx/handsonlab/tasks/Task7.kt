@@ -9,4 +9,14 @@ import kotlinx.coroutines.*
  *
  * Try changing the sequence of coroutines startup and see how it affects the function.
  */
-fun sendMessagesWithTwoCoroutines(msg1: String, msg2: String): Unit = TODO()
+fun sendMessagesWithTwoCoroutines(msg1: String, msg2: String): Unit {
+    runBlocking {
+        launch {
+            delay(2_000)
+            sendMessage(msg1)
+        }
+        launch {
+            sendMessage(msg2)
+        }
+    }
+}

@@ -8,7 +8,14 @@ import java.lang.Thread.sleep
  * Each coroutine should [sleep] for 2 seconds and then call [sendMessage] with [msg] parameter.
  * Wait for all the coroutine to finish using [joinAll].
  */
-fun sendMultipleWithSleep(n: Long, msg: String): Unit = TODO()
+fun sendMultipleWithSleep(n: Long, msg: String) = runBlocking {
+    (1..n).map {
+        GlobalScope.launch {
+            sleep(2_000)
+            sendMessage(msg)
+        }
+    }.joinAll()
+}
 
 /**
  * Implement [sendMultipleWithSleep] function. It should start [n] coroutines in [GlobalScope].
@@ -17,7 +24,14 @@ fun sendMultipleWithSleep(n: Long, msg: String): Unit = TODO()
  *
  * Can you tell the difference between this function and [sendMultipleWithSleep]?
  */
-fun sendMultipleWithDelay(n: Long, msg: String): Unit = TODO()
+fun sendMultipleWithDelay(n: Long, msg: String) = runBlocking {
+    (1..n).map {
+        GlobalScope.launch {
+            delay(2_000)
+            sendMessage(msg)
+        }
+    }.joinAll()
+}
 
 /**
  * Bonus task: increase the time from 2 seconds to 60 seconds. Execute the tests in both cases and use

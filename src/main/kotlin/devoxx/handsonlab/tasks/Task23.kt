@@ -10,4 +10,10 @@ import kotlinx.coroutines.launch
  * Implement [sendFromMultipleCoroutines] function, which should start [n] coroutines.
  * Each coroutine should send its number (1..n) to the [channel].
  */
-fun CoroutineScope.sendFromMultipleCoroutines(n: Int, channel: SendChannel<Int>): Unit = TODO()
+fun CoroutineScope.sendFromMultipleCoroutines(n: Int, channel: SendChannel<Int>) {
+    (1..n).map { no ->
+        launch(Dispatchers.Default) {
+            channel.send(no)
+        }
+    }
+}

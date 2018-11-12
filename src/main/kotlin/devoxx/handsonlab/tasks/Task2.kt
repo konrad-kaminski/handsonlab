@@ -8,4 +8,7 @@ import kotlinx.coroutines.runBlocking
   use [runBlocking] so that the function should not finish until the message has been sent. Do not use [launch].
  */
 
-fun blockingSendDelayedMessage(msg: String): Unit = TODO()
+fun blockingSendDelayedMessage(msg: String) = runBlocking {
+    delay(2_000)
+    sendMessage(msg)
+}

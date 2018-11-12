@@ -8,4 +8,15 @@ import kotlinx.coroutines.*
  * and return the results of [sendMessageAck] as a [Pair].
  * Do not use [GlobalScope]. Do not use [runBlocking].
  */
-suspend fun sendMessagesWithAsync(msg1: String, msg2: String): Pair<String, String> = TODO()
+suspend fun sendMessagesWithAsync(msg1: String, msg2: String): Pair<String, String> = coroutineScope {
+    val result1 = async(Dispatchers.Default) {
+        delay(2_000)
+        sendMessageAck(msg1)
+    }
+    val result2 = async(Dispatchers.Default) {
+        delay(2_000)
+        sendMessageAck(msg2)
+    }
+
+    result1.await() to result2.await()
+}

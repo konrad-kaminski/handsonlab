@@ -10,4 +10,13 @@ import kotlinx.coroutines.*
  *
  * What is the expected result? Is there a race condition here?
  */
-fun sendMessageWithGlobalScopeCancel(msg: String): Unit = TODO()
+fun sendMessageWithGlobalScopeCancel(msg: String) {
+    runBlocking {
+        val job = GlobalScope.launch {
+            delay(2_000)
+            sendMessage(msg)
+        }
+        job.cancel()
+        job.join()
+    }
+}

@@ -11,7 +11,9 @@ val requestId = ThreadLocal<String>()
  *
  * Hint: use [asContextElement]
  */
-suspend fun sendMessageWithRequestId(msg: String): Unit = TODO()
+suspend fun sendMessageWithRequestId(msg: String) = withContext(requestId.asContextElement()) {
+    sendMessageUsingDispatcherDefault(msg)
+}
 
 suspend fun sendMessageUsingDispatcherDefault (msg: String) = withContext(Dispatchers.Default) {
     sendMessage("${requestId.get()}: $msg")

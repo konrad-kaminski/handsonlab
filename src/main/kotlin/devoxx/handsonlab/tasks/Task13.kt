@@ -10,4 +10,15 @@ import kotlinx.coroutines.*
  *
  * Compare this function with [sendMessageWithCancel]. What differences do you see?
  */
-fun sendMessageCPUConsumingWithCancel(msg: String): Unit = TODO()
+fun sendMessageCPUConsumingWithCancel(msg: String) {
+    runBlocking {
+        val job = launch(Dispatchers.Default) {
+            val initialTime = System.currentTimeMillis()
+            while (System.currentTimeMillis() - initialTime < 2_000) {
+                // do nothing
+            }
+            sendMessage(msg)
+        }
+        job.cancel()
+    }
+}

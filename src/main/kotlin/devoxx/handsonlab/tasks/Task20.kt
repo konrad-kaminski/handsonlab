@@ -12,10 +12,19 @@ import kotlinx.coroutines.launch
  * another coroutine could read all messages from it (meaning exactly one message that you just sent).
  * Use [GlobalScope].
  */
-suspend fun sendMessageToChannel(msg: String): ReceiveChannel<String> = TODO()
+suspend fun sendMessageToChannel(msg: String): ReceiveChannel<String> = Channel<String>().apply {
+    GlobalScope.launch {
+        send(msg)
+        close()
+    }
+}
 
 /**
  * Implement [sendMessagesReceivedFromChannel] function, which should receive all messages from
  * the [channel] and send it using [sendMessage].
  */
-suspend fun sendMessagesReceivedFromChannel(channel: ReceiveChannel<String>): Unit = TODO()
+suspend fun sendMessagesReceivedFromChannel(channel: ReceiveChannel<String>): Unit {
+    channel.consumeEach { message ->
+        sendMessage(message)
+    }
+}

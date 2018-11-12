@@ -14,7 +14,17 @@ import kotlinx.coroutines.sync.withLock
  * 1. IncrementMessage -> the value should be added to the current totalValue.
  * 2. GetTotalMessage -> the totalValue should be sent to the replyTo channel.
  */
-fun CoroutineScope.createCountingActor(): SendChannel<Message> = TODO()
+fun CoroutineScope.createCountingActor(): SendChannel<Message> = actor {
+    var total = 0
+    consumeEach {
+        when (it) {
+            is Message.IncrementMessage -> total += it.value
+            is Message.GetTotalMessage -> {
+                it.replyTo.send(total)
+            }
+        }
+    }
+}
 
 sealed class Message {
     data class IncrementMessage(val value: Int): Message()

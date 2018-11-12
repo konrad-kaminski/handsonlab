@@ -13,4 +13,8 @@ import kotlinx.coroutines.newSingleThreadContext
  * the name of the coroutine ([coroutineName]) as [CoroutineName] context. The coroutine
  * should [sendMessage] with [msg] as a parameter.
  */
-fun sendMessageInNewThreadContext(coroutineName: String, threadName: String, msg: String): Unit = TODO()
+fun sendMessageInNewThreadContext(coroutineName: String, threadName: String, msg: String): Unit {
+    GlobalScope.launch(newSingleThreadContext(threadName) + CoroutineName(coroutineName)) {
+        sendMessage(msg)
+    }
+}

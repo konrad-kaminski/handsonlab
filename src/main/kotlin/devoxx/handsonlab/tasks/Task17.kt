@@ -11,4 +11,11 @@ import kotlin.coroutines.CoroutineContext
  * attached to the coroutine (in the form of [CoroutineExceptionHandler]), which should delegate
  * exception handling to the [onException] handler.
  */
-fun sendMessagesWithExceptionHandler(msg: String, onException: (Throwable) -> Unit): Unit = TODO()
+fun sendMessagesWithExceptionHandler(msg: String, onException: (Throwable) -> Unit) {
+    val handler = CoroutineExceptionHandler { _, ex ->
+        onException(ex)
+    }
+    GlobalScope.launch(handler) {
+        sendMessage(msg)
+    }
+}
