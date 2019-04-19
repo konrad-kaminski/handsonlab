@@ -11,18 +11,15 @@ import org.junit.jupiter.api.Test
  */
 @Tag("part1")
 class Test5 {
-    private val TARGET = object: SuspendingInterface {
-        override suspend fun execute(p: Int): Int = (p + 1).also {
-            if (p > 0) {
-                delay(p.toLong())
-            }
-        }
-    }
-
     @Test
     fun `should properly delegate calls for regular calls`() = runBlocking {
         //given
-        val task5 = Task5(TARGET)
+        val task5 = Task5(object : SuspendingInterface {
+            override suspend fun execute(p: Int): Int {
+                check(p == 0) { "Expected 0 as input" }
+                return 1
+            }
+        })
 
         //when
         val result = task5.execute(0)
@@ -34,7 +31,13 @@ class Test5 {
     @Test
     fun `should properly delegate calls for suspended calls`() = runBlocking {
         //given
-        val task5 = Task5(TARGET)
+        val task5 = Task5(object : SuspendingInterface {
+            override suspend fun execute(p: Int): Int {
+                check(p == 1) { "Expected 1 as input" }
+                delay(1)
+                return 2
+            }
+        })
 
         //when
         val result = task5.execute(1)
